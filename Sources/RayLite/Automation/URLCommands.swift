@@ -21,7 +21,7 @@ public final class Routes {
     public func open(_ url: URL) {
         switch route(for: url) {
         case "authentication":
-            NSLog("Ray Lite authentication is not available.")
+            NSLog("ray-lite authentication is not available.")
         case "paywall":
             controller?.presentPaywall()
         case "restore":

@@ -89,7 +89,7 @@ final class SettingsPanel: NSView {
             guard let theme = AppPreferences.Theme(rawValue: value) else { return }
             self?.preferences.theme = theme
         }
-        let footer = NSTextField(wrappingLabelWithString: "Ray Lite \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0")")
+        let footer = NSTextField(wrappingLabelWithString: "ray-lite \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0")")
         footer.frame = CGRect(x: 88, y: 378, width: 424, height: 58)
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center

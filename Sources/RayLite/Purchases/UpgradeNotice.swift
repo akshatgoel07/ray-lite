@@ -4,8 +4,8 @@ import AppKit
 public final class PaywallAlert: NSAlert {
     override public init() {
         super.init()
-        messageText = "Ray Lite Pro"
-        informativeText = "Purchases are not available in Ray Lite."
+        messageText = "ray-lite Pro"
+        informativeText = "Purchases are not available in ray-lite."
         addButton(withTitle: "Close")
     }
 

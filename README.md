@@ -1,6 +1,6 @@
-# Ray Lite
+# ray-lite
 
-Ray Lite is a native macOS app with an infinite board for notes and images.
+ray-lite is a native macOS app with an infinite board for notes and images.
 The canvas holds ideas, and each note opens in a full page editor.
 
 ## Screenshots
@@ -50,7 +50,7 @@ swift build
 Run the app.
 
 ```sh
-swift run RayLite
+swift run ray-lite
 ```
 
 Run the tests.

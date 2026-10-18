@@ -222,7 +222,7 @@ public struct NoteContent: Codable, Equatable, Sendable {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "MMM d"
-        let folder = downloads.appendingPathComponent("Ray Lite Export " + formatter.string(from: date), isDirectory: true)
+        let folder = downloads.appendingPathComponent("ray-lite Export " + formatter.string(from: date), isDirectory: true)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         let name = String(plainText.unicodeScalars.filter { CharacterSet.alphanumerics.contains($0) }.prefix(20))
         let base = name.isEmpty ? "Untitled" : name

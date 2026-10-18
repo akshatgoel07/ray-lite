@@ -1126,7 +1126,7 @@ private final class BoardSettingsOverlay: NSView, NSTextFieldDelegate {
         panel.layer?.shadowOffset = CGSize(width: 0, height: -8)
         addSubview(panel)
         let delete = ContentMenuRow(name: "Delete Space", symbol: "trash", shortcut: "")
-        let pro = ContentMenuRow(name: "Ray Lite Pro", symbol: "square.on.square", shortcut: "\(count) / 20 items")
+        let pro = ContentMenuRow(name: "ray-lite Pro", symbol: "square.on.square", shortcut: "\(count) / 20 items")
         for (row, y, action) in [(editRow, 116.0, #selector(editSpace)), (delete, 71.0, #selector(confirmDelete)), (pro, 8.0, #selector(openPro))] {
             row.frame = CGRect(x: 8, y: y, width: 296, height: 45)
             row.target = self

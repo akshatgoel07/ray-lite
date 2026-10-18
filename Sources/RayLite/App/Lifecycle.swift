@@ -24,7 +24,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
                                         .fullSizeContentView],
                             backing: .buffered, defer: false)
         if VerificationRuntime.enabled { window.colorSpace = .sRGB }
-        window.title = ""
+        window.title = "ray-lite"
         window.titleVisibility = .hidden
         window.center()
         window.titlebarAppearsTransparent = true
@@ -62,16 +62,16 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func installMenus(controller: WindowCoordinator) {
         let menu = NSMenu()
-        let applicationMenu = NSMenu(title: "Ray Lite")
+        let applicationMenu = NSMenu(title: "ray-lite")
         let settings = applicationMenu.addItem(withTitle: "Settings…", action: #selector(WindowCoordinator.showPreferences(_:)), keyEquivalent: ",")
         settings.target = controller
         applicationMenu.addItem(.separator())
-        applicationMenu.addItem(withTitle: "Hide Ray Lite", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        applicationMenu.addItem(withTitle: "Hide ray-lite", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         let hideOthers = applicationMenu.addItem(withTitle: "Hide Others", action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h")
         hideOthers.keyEquivalentModifierMask = [.command, .option]
         applicationMenu.addItem(withTitle: "Show All", action: #selector(NSApplication.unhideAllApplications(_:)), keyEquivalent: "")
         applicationMenu.addItem(.separator())
-        applicationMenu.addItem(withTitle: "Quit Ray Lite", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        applicationMenu.addItem(withTitle: "Quit ray-lite", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         let fileMenu = NSMenu(title: "File")
         let newNote = fileMenu.addItem(withTitle: "New Note", action: #selector(WindowCoordinator.createNote(_:)), keyEquivalent: "n")
         newNote.target = controller

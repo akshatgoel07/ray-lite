@@ -98,7 +98,7 @@ struct NoteBlockTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let date = Calendar(identifier: .gregorian).date(from: DateComponents(year: 2026, month: 10, day: 18))!
         let url = try content.exportMarkdown(downloads: directory, date: date)
-        #expect(url.deletingLastPathComponent().lastPathComponent == "Ray Lite Export Oct 18")
+        #expect(url.deletingLastPathComponent().lastPathComponent == "ray-lite Export Oct 18")
         #expect(url.lastPathComponent == "PreviewreferenceBody.md")
         #expect(try String(contentsOf: url, encoding: .utf8) == content.markdown())
         #expect(try content.exportMarkdown(downloads: directory, date: date) != url)

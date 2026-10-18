@@ -255,7 +255,7 @@ final class VerifyDriver: NSObject {
                 try await driver.run(steps)
                 NSApp.terminate(nil)
             } catch {
-                NSLog("Ray Lite verify failed: \(error)")
+                NSLog("ray-lite verify failed: \(error)")
                 exit(1)
             }
         }
