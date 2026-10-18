@@ -887,7 +887,7 @@ final class VerifyDriver: NSObject {
             "spaces": canvas.spaces.map { ["id": $0.id.uuidString, "name": $0.name, "order": $0.order] },
             "focus": window.firstResponder.map { String(describing: type(of: $0)) } ?? "",
             "focusedNote": (window.firstResponder as? EntryTile)?.id.uuidString ?? "",
-            "displayPreferences": ["reduceMotion": NSWorkspace.shared.accessibilityDisplayShouldReduceMotion,
+            "accessibilityDisplay": ["reduceMotion": NSWorkspace.shared.accessibilityDisplayShouldReduceMotion,
                 "increaseContrast": NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast,
                 "reduceTransparency": NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency],
             "buttons": buttons,

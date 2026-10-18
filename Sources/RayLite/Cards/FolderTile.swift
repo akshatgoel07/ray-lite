@@ -6,7 +6,7 @@ import CoreGraphics
 public final class FolderTile: NSView {
     public let entryDescriptor: BoardEntry
     public private(set) var containedItems: [BoardEntry]
-    let lidContainer = CALayer()
+    let folderFlapLayer = CALayer()
     let itemLayer = CALayer()
 
     public init(item: BoardEntry, contained: [BoardEntry]) {
@@ -14,9 +14,9 @@ public final class FolderTile: NSView {
         containedItems = contained
         super.init(frame: .zero)
         wantsLayer = true
-        lidContainer.name = "lidContainer"
+        folderFlapLayer.name = "folderFlapLayer"
         layer?.addSublayer(itemLayer)
-        layer?.addSublayer(lidContainer)
+        layer?.addSublayer(folderFlapLayer)
         redrawShape()
         for entry in contained.reversed() {
             let v = EntryTile(item: entry)
@@ -44,8 +44,8 @@ public final class FolderTile: NSView {
         let shape = CAShapeLayer()
         shape.path = path
         shape.fillColor = NSColor.systemGray.withAlphaComponent(0.30).cgColor
-        lidContainer.sublayers?.forEach { if $0 != shape { $0.removeFromSuperlayer() } }
-        lidContainer.addSublayer(shape)
+        folderFlapLayer.sublayers?.forEach { if $0 != shape { $0.removeFromSuperlayer() } }
+        folderFlapLayer.addSublayer(shape)
     }
 
     private func dropPoint(for entry: BoardEntry) -> CGPoint {
@@ -81,7 +81,7 @@ public final class FolderTile: NSView {
             size: item.size)
         guestLayer.transform = CATransform3DRotate(CATransform3DMakeScale(scale, scale, 1),
                                                    jitter, 0, 0, 1)
-        layer?.insertSublayer(guestLayer, below: lidContainer)
+        layer?.insertSublayer(guestLayer, below: folderFlapLayer)
         CATransaction.commit()
 
         SpringCore.shared.scaleItem(guestLayer, to: scale,
@@ -92,6 +92,6 @@ public final class FolderTile: NSView {
             to: NSNumber(value: 1),
             preset: SpringCatalog.Preset(stiffness: 100, damping: SpringCatalog.criticalDamping,
                                          mass: mass))
-        SpringCore.shared.add(lid, to: lidContainer, key: "rayLite.lidIn")
+        SpringCore.shared.add(lid, to: folderFlapLayer, key: "rayLite.lidIn")
     }
 }

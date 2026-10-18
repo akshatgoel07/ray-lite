@@ -13,8 +13,8 @@ public final class WindowCoordinator: NSViewController, NSMenuItemValidation, NS
     private var plusMenu: ContentMenuOverlay?
     private var spaceMenu: SpaceMenuOverlay?
     private var boardMenu: BoardSettingsOverlay?
-    private var bookmarksSidebar: SavedLinkPanel?
-    private var checklistSidebar: TaskListPanel?
+    private var savedLinksPanel: SavedLinkPanel?
+    private var tasksPanel: TaskListPanel?
     private let checklistProgress = ChecklistProgress(defaults: ProcessInfo.processInfo.environment["RAY_LITE_DEFAULTS_SUITE"]
         .flatMap(UserDefaults.init(suiteName:)) ?? .standard)
     private(set) var settingsWindow: NSWindow?
@@ -161,7 +161,7 @@ public final class WindowCoordinator: NSViewController, NSMenuItemValidation, NS
         checklistProgress.onChange = { [weak self] in
             guard let self else { return }
             counterButton.title = checklistProgress.counter
-            checklistSidebar?.refresh()
+            tasksPanel?.refresh()
         }
         boardSurface.onSelectionChange = { [weak self] in
             guard let self else { return }
@@ -347,7 +347,7 @@ public final class WindowCoordinator: NSViewController, NSMenuItemValidation, NS
     }
 
     @objc private func toggleChecklist(_ sender: Any?) {
-        if checklistSidebar != nil { closeChecklist(); return }
+        if tasksPanel != nil { closeChecklist(); return }
         guard boardSurface.finishEditing() else { return }
         closePlusMenu()
         closeSpaceMenu()
@@ -357,7 +357,7 @@ public final class WindowCoordinator: NSViewController, NSMenuItemValidation, NS
         sidebar.onClose = { [weak self] in self?.closeChecklist() }
         view.addSubview(sidebar)
         if let controls = counterButton.superview, controls !== view { view.addSubview(controls) }
-        checklistSidebar = sidebar
+        tasksPanel = sidebar
         counterButton.state = .on
         counterButton.needsDisplay = true
         sidebar.layoutSubtreeIfNeeded()
@@ -366,8 +366,8 @@ public final class WindowCoordinator: NSViewController, NSMenuItemValidation, NS
     }
 
     private func closeChecklist() {
-        checklistSidebar?.removeFromSuperview()
-        checklistSidebar = nil
+        tasksPanel?.removeFromSuperview()
+        tasksPanel = nil
         counterButton.state = .off
         counterButton.needsDisplay = true
         view.window?.makeFirstResponder(counterButton)
@@ -479,19 +479,19 @@ public final class WindowCoordinator: NSViewController, NSMenuItemValidation, NS
     }
 
     private func showSavedLinks() {
-        guard bookmarksSidebar == nil, boardSurface.finishEditing() else { return }
+        guard savedLinksPanel == nil, boardSurface.finishEditing() else { return }
         closePlusMenu()
         closeSpaceMenu()
         closeBoardSettings()
         let sidebar = SavedLinkPanel(frame: view.bounds)
         sidebar.autoresizingMask = [.width, .height]
         sidebar.onClose = { [weak self] in
-            self?.bookmarksSidebar?.removeFromSuperview()
-            self?.bookmarksSidebar = nil
+            self?.savedLinksPanel?.removeFromSuperview()
+            self?.savedLinksPanel = nil
             self?.view.window?.makeFirstResponder(self?.boardSurface)
         }
         view.addSubview(sidebar)
-        bookmarksSidebar = sidebar
+        savedLinksPanel = sidebar
         view.window?.makeFirstResponder(sidebar)
         sidebar.layoutSubtreeIfNeeded()
     }

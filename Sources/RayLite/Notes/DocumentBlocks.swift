@@ -48,7 +48,7 @@ public struct NoteRun: Codable, Equatable, Sendable {
     }
 }
 
-public struct NoteBlock: Codable, Equatable, Sendable {
+public struct DocumentBlock: Codable, Equatable, Sendable {
     public var style: NoteBlockStyle
     public var runs: [NoteRun]
     public var checked: Bool
@@ -84,18 +84,18 @@ public struct NoteBlock: Codable, Equatable, Sendable {
 }
 
 public struct NoteContent: Codable, Equatable, Sendable {
-    public private(set) var blocks: [NoteBlock]
+    public private(set) var blocks: [DocumentBlock]
     public var plainText: String { blocks.map(\.text).joined(separator: "\n") }
     public var editorText: String { blocks.map(\.editorText).joined(separator: "\n") }
 
-    public init(blocks: [NoteBlock]) {
-        self.blocks = blocks.isEmpty ? [NoteBlock(style: .display)] : blocks
+    public init(blocks: [DocumentBlock]) {
+        self.blocks = blocks.isEmpty ? [DocumentBlock(style: .display)] : blocks
         for index in self.blocks.indices { self.blocks[index].normalize() }
     }
 
     public init(plainText: String) {
         blocks = plainText.components(separatedBy: "\n").enumerated().map {
-            NoteBlock(style: $0.offset == 0 ? .display : .body, text: $0.element)
+            DocumentBlock(style: $0.offset == 0 ? .display : .body, text: $0.element)
         }
     }
 
@@ -128,7 +128,7 @@ public struct NoteContent: Codable, Equatable, Sendable {
         let suffix = last.slice(NSRange(location: end.character, length: (last.text as NSString).length - end.character))
         let lines = text.components(separatedBy: "\n")
         var replacements = lines.enumerated().map { index, line in
-            var block = NoteBlock(style: index == 0 ? first.style : continuation ?? .body,
+            var block = DocumentBlock(style: index == 0 ? first.style : continuation ?? .body,
                                   checked: index == 0 && first.checked)
             block.runs = (index == 0 ? prefix : []) + (line.isEmpty ? [] : [NoteRun(line, marks: marks, link: link)])
             return block
@@ -154,7 +154,7 @@ public struct NoteContent: Codable, Equatable, Sendable {
 
     public mutating func consumeTrigger(at index: Int) -> Bool {
         guard let style = NoteBlockStyle.trigger(blocks[index].text) else { return false }
-        blocks[index] = NoteBlock(style: style)
+        blocks[index] = DocumentBlock(style: style)
         return true
     }
 

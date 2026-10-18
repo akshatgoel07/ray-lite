@@ -6,13 +6,13 @@ import Testing
 @MainActor
 struct NoteBlockTests {
     @Test func contentRoundTripPreservesBlocksMarksAndPlainText() throws {
-        var title = NoteBlock(style: .display, text: "Notes 📝")
+        var title = DocumentBlock(style: .display, text: "Notes 📝")
         title.runs = [NoteRun("Notes ", marks: [.bold]), NoteRun("📝", marks: [.italic, .highlight])]
-        var task = NoteBlock(style: .task, text: "Read", checked: true)
+        var task = DocumentBlock(style: .task, text: "Read", checked: true)
         task.runs = [NoteRun("Read", marks: [.underline, .strikethrough], link: "https://example.com")]
-        let content = NoteContent(blocks: [title, NoteBlock(style: .headline, text: "Heading"),
-                                            NoteBlock(style: .subheader, text: "Section"),
-                                            NoteBlock(text: ""), NoteBlock(style: .list, text: "Item"), task])
+        let content = NoteContent(blocks: [title, DocumentBlock(style: .headline, text: "Heading"),
+                                            DocumentBlock(style: .subheader, text: "Section"),
+                                            DocumentBlock(text: ""), DocumentBlock(style: .list, text: "Item"), task])
         #expect(try JSONDecoder().decode(NoteContent.self, from: JSONEncoder().encode(content)) == content)
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -62,7 +62,7 @@ struct NoteBlockTests {
 
     @Test(arguments: ["# ", "## ", "### ", "- ", "* ", "[] ", "[ ] "])
     func supportedTriggersConsumeOnlyExactPrefix(prefix: String) {
-        var content = NoteContent(blocks: [NoteBlock(text: prefix)])
+        var content = NoteContent(blocks: [DocumentBlock(text: prefix)])
         let consumed = content.consumeTrigger(at: 0)
         #expect(consumed)
         #expect(content.blocks[0].text.isEmpty)
@@ -71,7 +71,7 @@ struct NoteBlockTests {
 
     @Test(arguments: ["1. ", "> ", "```", "---", "#### ", "body # "])
     func unsupportedTriggersStayLiteral(prefix: String) {
-        var content = NoteContent(blocks: [NoteBlock(text: prefix)])
+        var content = NoteContent(blocks: [DocumentBlock(text: prefix)])
         let consumed = content.consumeTrigger(at: 0)
         #expect(!consumed)
         #expect(content.plainText == prefix)
@@ -89,10 +89,10 @@ struct NoteBlockTests {
     }
 
     @Test func exportKeepsPrefixesAndUsesReferenceDestination() throws {
-        let content = NoteContent(blocks: [NoteBlock(style: .display, text: "Preview reference"),
-            NoteBlock(text: "Body line sample"), NoteBlock(style: .headline, text: "Headline sample"),
-            NoteBlock(style: .subheader, text: "Subheader sample"), NoteBlock(style: .list, text: "Bullet sample"),
-            NoteBlock(style: .task, text: "Task sample"), NoteBlock(style: .task, text: "Done", checked: true)])
+        let content = NoteContent(blocks: [DocumentBlock(style: .display, text: "Preview reference"),
+            DocumentBlock(text: "Body line sample"), DocumentBlock(style: .headline, text: "Headline sample"),
+            DocumentBlock(style: .subheader, text: "Subheader sample"), DocumentBlock(style: .list, text: "Bullet sample"),
+            DocumentBlock(style: .task, text: "Task sample"), DocumentBlock(style: .task, text: "Done", checked: true)])
         #expect(content.markdown() == "# Preview reference\nBody line sample\n## Headline sample\n### Subheader sample\n- Bullet sample\n- [ ] Task sample\n- [x] Done")
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -113,11 +113,11 @@ struct NoteBlockTests {
 
     @Test func exportPreservesMarkdownBytes() throws {
         let source = "# Project notes\nBody line sample\n## Plan\n### Details\n- First idea\n- [ ] Share the draft\nRésumé and a link: https://example.com/notes"
-        var blocks: [NoteBlock] = []
+        var blocks: [DocumentBlock] = []
         for line in source.components(separatedBy: "\n") {
-            var block = NoteBlock(text: line)
+            var block = DocumentBlock(text: line)
             for (prefix, style) in [("- [ ] ", NoteBlockStyle.task), ("### ", .subheader), ("## ", .headline), ("# ", .display), ("- ", .list)] {
-                if line.hasPrefix(prefix) { block = NoteBlock(style: style, text: String(line.dropFirst(prefix.count))); break }
+                if line.hasPrefix(prefix) { block = DocumentBlock(style: style, text: String(line.dropFirst(prefix.count))); break }
             }
             blocks.append(block)
         }
@@ -239,7 +239,7 @@ struct NoteBlockTests {
     @Test func headingCaretMatchesTheTextEnd() {
         let view = editor()
         for style in [NoteBlockStyle.display, .headline, .subheader, .body] {
-            view.load(NoteContent(blocks: [NoteBlock(style: style, text: "Heading sample")]))
+            view.load(NoteContent(blocks: [DocumentBlock(style: style, text: "Heading sample")]))
             view.setSelectedRange(NSRange(location: (view.string as NSString).length, length: 0))
             let font = NotePageTypography.font(size: style.fontSize, weight: style.fontSize > 16 ? .medium : .regular)
             let width = NSAttributedString(string: "Heading sample", attributes: [.font: font, .kern: style == .display ? -0.5 : -0.25]).size().width

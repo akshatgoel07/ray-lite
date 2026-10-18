@@ -129,7 +129,7 @@ public final class BoardSurface: NSView, NSMenuItemValidation {
         focusLayer.fillColor = nil
         focusLayer.lineWidth = 3
         overlayLayer.addSublayer(focusLayer)
-        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(displayPreferencesChanged),
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(accessibilityDisplayChanged),
             name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: nil)
         boardContentHost.wantsLayer = true
         addSubview(boardContentHost)
@@ -929,7 +929,7 @@ public final class BoardSurface: NSView, NSMenuItemValidation {
         }
     }
 
-    @objc private func displayPreferencesChanged() {
+    @objc private func accessibilityDisplayChanged() {
         if NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
             boardContentHost.layer?.removeAnimation(forKey: "rayLite.camera")
             cameraTimer?.invalidate()
